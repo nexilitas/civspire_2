@@ -33,10 +33,11 @@ public class GroupCreateCommand implements CommandExecutor {
         UUID uuid = player.getUniqueId();
 
         // Check if player is already in a group
-        if (plugin.getGroupManager().getGroupByPlayer(uuid).isPresent()) {
+        if (!plugin.getGroupManager().getGroupsByPlayer(uuid).isEmpty()) {
             player.sendMessage("§cYou are already in a group.");
             return true;
         }
+
 
         String name = args[0];
 

@@ -2,10 +2,11 @@ package org.command;
 
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.civspire;
+import org.civspire;  // Use your actual main plugin class name & package
 import org.invoke.Group;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class GroupRenameCommand implements CommandExecutor {
@@ -22,27 +23,45 @@ public class GroupRenameCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length < 1) {
-            player.sendMessage("§cUsage: /grouprename <newName>");
+        // We require 2 arguments: group name/ID, and new name
+        if (args.length < 2) {
+            player.sendMessage("§cUsage: /grouprename <groupName> <newName>");
             return true;
         }
 
-        UUID uuid = player.getUniqueId();
-        Optional<Group> groupOpt = plugin.getGroupManager().getGroupByPlayer(uuid);
+        String targetGroupName = args[0];
+        String newName = args[1];
+        UUID playerUUID = player.getUniqueId();
 
-        if (groupOpt.isEmpty()) {
-            player.sendMessage("§cYou are not in a group.");
+        // Get all groups player belongs to
+        Set<Group> groups = plugin.getGroupManager().getGroupsByPlayer(playerUUID);
+
+        if (groups.isEmpty()) {
+            player.sendMessage("§cYou are not a member of any group.");
             return true;
         }
 
-        Group group = groupOpt.get();
-        if (!group.getOwner().equals(uuid)) {
+        // Find group matching input name/ID among player's groups
+        Optional<Group> matchingGroup = groups.stream()
+                .filter(g -> g.getName().equalsIgnoreCase(targetGroupName) || g.getId().equalsIgnoreCase(targetGroupName))
+                .findFirst();
+
+        if (matchingGroup.isEmpty()) {
+            player.sendMessage("§cYou are not a member of a group named '" + targetGroupName + "'.");
+            return true;
+        }
+
+        Group group = matchingGroup.get();
+
+        // Check ownership
+        if (!group.getOwner().equals(playerUUID)) {
             player.sendMessage("§cOnly the group owner can rename the group.");
             return true;
         }
 
-        group.setName(args[0]);
-        player.sendMessage("§aGroup renamed to: " + group.getName());
+        group.setName(newName);
+        plugin.getGroupManager().saveAll();
+        player.sendMessage("§aGroup renamed to: " + newName);
         return true;
     }
 }

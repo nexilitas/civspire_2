@@ -30,7 +30,7 @@ public class GroupInviteCommand implements CommandExecutor {
         }
 
         UUID senderId = player.getUniqueId();
-        Optional<Group> groupOpt = plugin.getGroupManager().getGroupByPlayer(senderId);
+        Optional<Group> groupOpt = plugin.getGroupManager().getGroupsByPlayer(senderId);
 
         if (groupOpt.isEmpty()) {
             player.sendMessage("§cYou are not in a group.");

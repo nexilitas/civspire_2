@@ -7,16 +7,22 @@ import org.storagelogic.GroupStorage;
 import java.util.*;
 
 public class GroupManager {
+
+    // Map group ID to Group object
     private final Map<String, Group> groups = new HashMap<>();
+
+    // Map player UUID to set of group IDs they belong to
     private final Map<UUID, Set<String>> playerGroupsMap = new HashMap<>();
 
-
     public GroupManager() {
-        // Load from disk
-        for (Group group : GroupStorage.loadGroups()) {
+        // Load groups from storage
+        Collection<Group> loadedGroups = GroupStorage.loadGroups();
+
+        for (Group group : loadedGroups) {
             groups.put(group.getId(), group);
             for (GroupMember member : group.getMembers()) {
-                playerGroupMap.put(member.getUuid(), group.getId());
+                UUID memberUUID = member.getUuid();
+                playerGroupsMap.computeIfAbsent(memberUUID, k -> new HashSet<>()).add(group.getId());
             }
         }
     }
@@ -29,21 +35,20 @@ public class GroupManager {
         String id = UUID.randomUUID().toString();
         Group group = new Group(id, name, owner);
         groups.put(id, group);
-        playerGroupMap.put(owner, id);
+        playerGroupsMap.computeIfAbsent(owner, k -> new HashSet<>()).add(id);
         return group;
     }
 
-    // delete a group
     public boolean deleteGroup(String id) {
         Group removed = groups.remove(id);
         if (removed != null) {
             for (GroupMember member : removed.getMembers()) {
-                UUID uuid = member.getUuid();
-                Set<String> groupSet = playerGroupsMap.get(uuid);
+                UUID memberUUID = member.getUuid();
+                Set<String> groupSet = playerGroupsMap.get(memberUUID);
                 if (groupSet != null) {
                     groupSet.remove(id);
                     if (groupSet.isEmpty()) {
-                        playerGroupsMap.remove(uuid);
+                        playerGroupsMap.remove(memberUUID);
                     }
                 }
             }
@@ -56,11 +61,12 @@ public class GroupManager {
         return Optional.ofNullable(groups.get(id));
     }
 
+    // Returns all groups player is part of
     public Set<Group> getGroupsByPlayer(UUID player) {
-        Set<String> ids = playerGroupsMap.getOrDefault(player, Collections.emptySet());
+        Set<String> groupIds = playerGroupsMap.getOrDefault(player, Collections.emptySet());
         Set<Group> playerGroups = new HashSet<>();
-        for (String id : ids) {
-            Group group = groups.get(id);
+        for (String groupId : groupIds) {
+            Group group = groups.get(groupId);
             if (group != null) {
                 playerGroups.add(group);
             }
@@ -68,7 +74,7 @@ public class GroupManager {
         return playerGroups;
     }
 
-
+    // Joins a player to a group; adds as "member" rank by default
     public void joinGroup(UUID player, String groupId) {
         Group group = groups.get(groupId);
         if (group != null) {
@@ -77,7 +83,7 @@ public class GroupManager {
         }
     }
 
-
+    // Player leaves a specific group
     public void leaveGroup(UUID player, String groupId) {
         Group group = groups.get(groupId);
         if (group != null) {
@@ -92,8 +98,21 @@ public class GroupManager {
         }
     }
 
+    // Optional: remove player from all groups they belong to
+    public void leaveAllGroups(UUID player) {
+        Set<String> groupSet = playerGroupsMap.remove(player);
+        if (groupSet != null) {
+            for (String groupId : groupSet) {
+                Group group = groups.get(groupId);
+                if (group != null) {
+                    group.removeMember(player);
+                }
+            }
+        }
+    }
 
+    // Get all groups in system
     public Collection<Group> getAllGroups() {
-        return groups.values();
+        return Collections.unmodifiableCollection(groups.values());
     }
 }
