@@ -1,0 +1,19 @@
+name: civspire
+version: '1.0'
+main: org.civspire
+api-version: '1.21'
+commands:
+  groupcreate:
+    description: Create a new group
+  groupdelete:
+    description: Delete a group
+  grouprename:
+    description: Rename a group
+  groupinvite:
+    description: Invite someone to a group
+  groupaccept:
+    description: Accept a group invite
+  groupleave:
+    description: Leave your current group
+  groupjoin:
+    description: Join an open group
