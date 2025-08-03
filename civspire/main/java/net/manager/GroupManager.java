@@ -1,8 +1,8 @@
-package org.manager;
+package net.manager;
 
-import org.invoke.Group;
-import org.invoke.GroupMember;
-import org.storagelogic.GroupStorage;
+import net.invoke.Group;
+import net.invoke.GroupMember;
+import net.storagelogic.GroupStorage;
 
 import java.util.*;
 

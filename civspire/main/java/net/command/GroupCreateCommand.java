@@ -1,7 +1,7 @@
-package org.command;
+package net.command;
 
-import org.civspire;
-import org.invoke.Group;
+import net.civspire;
+import net.invoke.Group;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

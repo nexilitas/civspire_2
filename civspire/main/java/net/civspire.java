@@ -1,8 +1,11 @@
-package org;
+package net;
 
+import net.command.*;
+import net.manager.GroupInviteManager;
+import net.manager.GroupManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.command.*;
-import org.manager.*;
+import net.command.*;
+import net.manager.*;
 
 public final class civspire extends JavaPlugin {
     private GroupManager groupManager;

@@ -1,9 +1,9 @@
-package org.command;
+package net.command;
 
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.civspire;  // Use your actual main plugin class name & package
-import org.invoke.Group;
+import net.civspire;  // Use your actual main plugin class name & package
+import net.invoke.Group;
 
 import java.util.Optional;
 import java.util.Set;

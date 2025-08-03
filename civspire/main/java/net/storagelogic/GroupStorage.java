@@ -1,9 +1,9 @@
-package org.storagelogic;
+package net.storagelogic;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.invoke.Group;
+import net.invoke.Group;
 
 import java.io.*;
 import java.lang.reflect.Type;

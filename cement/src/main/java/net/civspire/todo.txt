@@ -1,0 +1,5 @@
+implement block reinforcement
+implement involvement with group plugin
+reassemble group plugin as "GroupSpire"
+implement data storage for reinforced blocks as follows:
+:: region folder -> chunk folder -> chunk.yml with line by line of protected blocks

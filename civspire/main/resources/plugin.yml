@@ -1,6 +1,6 @@
 name: civspire
 version: '1.0'
-main: org.civspire
+main: net.civspire
 api-version: '1.21'
 commands:
   groupcreate:

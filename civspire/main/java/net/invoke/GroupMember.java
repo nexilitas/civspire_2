@@ -1,4 +1,4 @@
-package org.invoke;
+package net.invoke;
 
 import java.util.*;
 

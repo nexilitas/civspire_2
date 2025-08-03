@@ -1,4 +1,4 @@
-package org.manager;
+package net.manager;
 
 import java.util.*;
 

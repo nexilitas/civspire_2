@@ -1,13 +1,13 @@
-package org.command;
+package net.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.civspire;
-import org.invoke.Group;
+import net.civspire;  // Adjust package and class name here
+import net.invoke.Group;
 
-import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class GroupInviteCommand implements CommandExecutor {
@@ -30,16 +30,18 @@ public class GroupInviteCommand implements CommandExecutor {
         }
 
         UUID senderId = player.getUniqueId();
-        Optional<Group> groupOpt = plugin.getGroupManager().getGroupsByPlayer(senderId);
+        Set<Group> groups = plugin.getGroupManager().getGroupsByPlayer(senderId);
 
-        if (groupOpt.isEmpty()) {
-            player.sendMessage("§cYou are not in a group.");
+        if (groups.isEmpty()) {
+            player.sendMessage("§cYou are not in any group.");
             return true;
         }
 
-        Group group = groupOpt.get();
+        // TODO: Handle multiple groups properly.
+        // For now, pick the first group player is in:
+        Group group = groups.iterator().next();
 
-        // Optional: check permissions via ranks here
+        // Optional: check permission
         if (!group.memberHasPermission(senderId, "invite")) {
             player.sendMessage("§cYou don't have permission to invite.");
             return true;
@@ -51,9 +53,9 @@ public class GroupInviteCommand implements CommandExecutor {
             return true;
         }
 
-        // 🔶 Placeholder for a real invitation system
-        // For now, just notify
-        player.sendMessage("§aYou invited " + target.getName() + " to join your group.");
+        // TODO: Implement real invitation logic (store invites, expiration, etc.)
+
+        player.sendMessage("§aYou invited " + target.getName() + " to join your group: " + group.getName());
         if (target.isOnline()) {
             target.getPlayer().sendMessage("§eYou were invited to join the group: §b" + group.getName());
             target.getPlayer().sendMessage("§7Use /groupaccept " + group.getName() + " to accept.");

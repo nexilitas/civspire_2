@@ -1,9 +1,9 @@
-package org.command;
+package net.command;
 
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.civspire;
-import org.invoke.Group;
+import net.civspire;
+import net.invoke.Group;
 
 import java.util.Optional;
 import java.util.UUID;
